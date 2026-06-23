@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Наше меню</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f7f6f3;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* HERO */
+  .hero {
+    background: #fff;
+    text-align: center;
+    padding: 2.5rem 1rem 2rem;
+    border-bottom: 1px solid #e8e6e0;
+  }
+  .badge-fresh {
+    display: inline-block;
+    background: #EAF3DE;
+    color: #3B6D11;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: #6b6b6b;
+    margin-top: 6px;
+  }
+
+  /* CONTENT */
+  .content { max-width: 700px; margin: 0 auto; padding: 0 1rem; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin: 2rem 0 1rem;
+  }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 14px;
+  }
+
+  /* CARD */
+  .card {
+    background: #fff;
+    border: 1px solid #e8e6e0;
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-emoji { font-size: 38px; text-align: center; padding: 0.4rem 0; }
+  .card-name { font-size: 14px; font-weight: 600; color: #1a1a1a; line-height: 1.3; }
+  .card-desc { font-size: 12px; color: #888; line-height: 1.5; }
+  .card-price { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+  .card-price span { font-size: 12px; color: #999; font-weight: 400; }
+
+  /* COUNTER */
+  .counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .cnt-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid #d0cfc8;
+    background: #f7f6f3;
+    color: #1a1a1a;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    line-height: 1;
+  }
+  .cnt-btn:hover { background: #ece9e2; }
+  .cnt-val {
+    font-size: 15px;
+    font-weight: 600;
+    min-width: 24px;
+    text-align: center;
+  }
+  .total-line {
+    font-size: 12px;
+    color: #888;
+    min-height: 18px;
+  }
+  .total-line b { color: #1D9E75; }
+
+  /* CART BAR */
+  .cart-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #e8e6e0;
+    padding: 12px 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    z-index: 50;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+  .cart-info { display: flex; align-items: center; gap: 10px; }
+  .cart-icon-wrap { position: relative; display: inline-flex; }
+  .cart-icon-wrap i { font-size: 24px; color: #1a1a1a; }
+  .cart-count {
+    position: absolute;
+    top: -6px; right: -8px;
+    background: #D85A30;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 50%;
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cart-total { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+
+  .btn-checkout {
+    background: #1D9E75;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.15s;
+  }
+  .btn-checkout:hover { background: #0F6E56; }
+  .btn-checkout:disabled {
+    background: #d0cfc8;
+    color: #999;
+    cursor: default;
+  }
+
+  /* MODAL */
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 360px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .modal-header h2 { font-size: 18px; font-weight: 700; }
+  .modal-close {
+    background: #f7f6f3; border: none; border-radius: 50%;
+    width: 32px; height: 32px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; color: #666;
+  }
+  .modal-close:hover { background: #ece9e2; }
+  .modal-items {
+    border-top: 1px solid #e8e6e0;
+    padding-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .modal-item {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 14px;
+  }
+  .modal-item-name { color: #555; }
+  .modal-item-price { font-weight: 600; color: #1a1a1a; }
+  .modal-total {
+    display: flex; justify-content: space-between;
+    font-size: 16px; font-weight: 700;
+    border-top: 1px solid #e8e6e0;
+    padding-top: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 13px; color: #777; margin-bottom: 6px; font-weight: 500; }
+  .field input {
+    width: 100%;
+    border: 1px solid #d0cfc8;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    background: #f7f6f3;
+    color: #1a1a1a;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .field input:focus { border-color: #1D9E75; }
+  .modal-btns { display: flex; gap: 10px; margin-top: 1.25rem; }
+  .btn-cancel {
+    flex: 1;
+    border: 1px solid #d0cfc8;
+    background: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #444;
+    font-weight: 500;
+  }
+  .btn-cancel:hover { background: #f7f6f3; }
+  .btn-send {
+    flex: 2;
+    background: #25D366;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: background 0.15s;
+  }
+  .btn-send:hover { background: #1da851; }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .hero-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge-fresh">Свежая выпечка и закуски</div>
+  <div class="hero-title">Наше меню</div>
+  <div class="hero-sub">Выберите позиции и оформите заказ</div>
+</div>
+
+<div class="content">
+  <div class="section-label">Круассаны</div>
+  <div class="grid" id="grid-croissant"></div>
+
+  <div class="section-label">Чиабата</div>
+  <div class="grid" id="grid-ciabatta"></div>
+
+  <div class="section-label">Другое</div>
+  <div class="grid" id="grid-other"></div>
+</div>
+
+<!-- CART BAR -->
+<div class="cart-bar">
+  <div class="cart-info">
+    <div class="cart-icon-wrap">
+      <i class="ti ti-shopping-bag"></i>
+      <span class="cart-count" id="cart-count">0</span>
+    </div>
+    <span class="cart-total" id="cart-total">0 ₸</span>
+  </div>
+  <button class="btn-checkout" id="btn-checkout" disabled onclick="openModal()">
+    <i class="ti ti-arrow-right" style="font-size:16px"></i>
+    Оформить заказ
+  </button>
+</div>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Ваш заказ</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-items" id="modal-items"></div>
+    <div class="modal-total">
+      <span>Итого</span>
+      <span id="modal-total-val"></span>
+    </div>
+    <div class="field">
+      <label for="pickup-date">Дата получения</label>
+      <input type="date" id="pickup-date">
+    </div>
+    <div class="field">
+      <label for="pickup-time">Время получения</label>
+      <input type="time" id="pickup-time" value="12:00">
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Назад</button>
+      <button class="btn-send" onclick="sendToWhatsApp()">
+        <i class="ti ti-brand-whatsapp" style="font-size:18px"></i>
+        Отправить в WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const PHONE = '77784695317';
+
+  const products = [
+    { id: 1, cat: 'croissant', name: 'Круассан с курицей',   desc: 'Нежная куриная начинка с зеленью',           price: 1500, emoji: '🥐' },
+    { id: 2, cat: 'croissant', name: 'Круассан с сёмгой',    desc: 'Слабосолёная сёмга со сливочным сыром',       price: 1800, emoji: '🥐' },
+    { id: 3, cat: 'ciabatta',  name: 'Чиабата классическая', desc: 'Хрустящая корочка, воздушный мякиш',          price: 900,  emoji: '🍞' },
+    { id: 4, cat: 'other',     name: 'Кесадилья',            desc: 'С сыром и курицей на гриле',                  price: 1600, emoji: '🫓' },
+  ];
+
+  const counts = {};
+  products.forEach(p => counts[p.id] = 0);
+
+  function fmt(n) { return n.toLocaleString('ru-KZ') + ' ₸'; }
+
+  function renderCard(p) {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="card-emoji">${p.emoji}</div>
+      <div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+      </div>
+      <div class="card-price">${fmt(p.price)} <span>/ шт</span></div>
+      <div class="counter">
+        <button class="cnt-btn" onclick="change(${p.id},-1)">−</button>
+        <span class="cnt-val" id="cnt-${p.id}">0</span>
+        <button class="cnt-btn" onclick="change(${p.id},1)">+</button>
+      </div>
+      <div class="total-line" id="tl-${p.id}">&nbsp;</div>
+    `;
+    return div;
+  }
+
+  ['croissant','ciabatta','other'].forEach(cat => {
+    const el = document.getElementById('grid-' + cat);
+    products.filter(p => p.cat === cat).forEach(p => el.appendChild(renderCard(p)));
+  });
+
+  function change(id, delta) {
+    counts[id] = Math.max(0, counts[id] + delta);
+    const p = products.find(x => x.id === id);
+    document.getElementById('cnt-' + id).textContent = counts[id];
+    const tl = document.getElementById('tl-' + id);
+    tl.innerHTML = counts[id] > 0
+      ? `Итого: <b>${fmt(p.price * counts[id])}</b>`
+      : '&nbsp;';
+    updateCart();
+  }
+
+  function updateCart() {
+    let total = 0, qty = 0;
+    products.forEach(p => { total += p.price * counts[p.id]; qty += counts[p.id]; });
+    document.getElementById('cart-count').textContent = qty;
+    document.getElementById('cart-total').textContent = fmt(total);
+    document.getElementById('btn-checkout').disabled = qty === 0;
+  }
+
+  function openModal() {
+    const items = products.filter(p => counts[p.id] > 0);
+    const container = document.getElementById('modal-items');
+    container.innerHTML = '';
+    let total = 0;
+    items.forEach(p => {
+      const sum = p.price * counts[p.id];
+      total += sum;
+      const row = document.createElement('div');
+      row.className = 'modal-item';
+      row.innerHTML = `<span class="modal-item-name">${p.name} × ${counts[p.id]}</span><span class="modal-item-price">${fmt(sum)}</span>`;
+      container.appendChild(row);
+    });
+    document.getElementById('modal-total-val').textContent = fmt(total);
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('pickup-date').min = today;
+    document.getElementById('pickup-date').value = today;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+  }
+
+  function sendToWhatsApp() {
+    const date = document.getElementById('pickup-date').value;
+    const time = document.getElementById('pickup-time').value;
+    if (!date) { alert('Пожалуйста, выберите дату'); return; }
+    const items = products.filter(p => counts[p.id] > 0);
+    let total = 0;
+    const lines = items.map(p => {
+      const sum = p.price * counts[p.id];
+      total += sum;
+      return `• ${p.name} × ${counts[p.id]} шт = ${fmt(sum)}`;
+    }).join('\n');
+    const msg = `🛒 *Новый заказ*\n\n${lines}\n\n💰 *Итого: ${fmt(total)}*\n📅 Дата получения: ${date}\n⏰ Время: ${time}`;
+    window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+</script>
+</body>
+</html>
